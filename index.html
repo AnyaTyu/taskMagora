@@ -6,13 +6,44 @@
 </head>
 <body>
 <header class="header">
-    <div class="header_item header__logo">NOTEs</div>
-    <div class="header_item header__greeting">Hello, <span data-bind="text:name"></span></div>
-    <div class="header_item header__exit"><button class="button button_type_login">Exit</button></div>
+    <div class="header__item header__item_logo">NOTEs</div>
+    <div class="header__item header__item_greeting">Hello, <span data-bind="text:name"></span></div>
+    <div class="header__item header__item_exit">
+        <button class="button button_type_login">Exit</button>
+    </div>
 </header>
+<div class="content">
+    <div class="content_item content_item__list">
+            <h2 class="title">All my notes:</h2>
+            <table class="table">
+                <!-- ko template: {name: 'grid-tpl', foreach: notes} -->
+                <!-- /ko -->
+            </table>
+            <!-- ko if: notes().length === 0 -->
+            <div class="defaul-value">You haven't notes yet ...</div>
+            <!-- /ko -->
+    </div>
+    <div class="content_item content_item__new">
+        <h2 class="title">Add new note:</h2>
+        <textarea  autofocus="" class="textarea" data-bind="value:note" maxlength = "320">Enter your note</textarea>
+        <button class="button button_type_submit" data-bind="click:save">Save note</button>
+    </div>
+</div>
+<script type="text/html" id="grid-tpl">
+    <tr class="table__tr">
+        <td class="table__td" data-bind="text:text"></td>
+        <td class="table__td" data-bind="text:date | my_date"></td>
+        <td class="table__td" data-bind="click:$parent.deleteItem"><span class="table__td__item_delete"></span></td>
+    </tr>
+</script>
+<footer class="footer">Copyright © 2015. Anya Tyutyunnik</footer>
 </body>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/knockout/dist/knockout.js"></script>
 <script type="text/javascript" src="bower_components/knockout.punches/knockout.punches.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script>
+    moment().format();
+</script>
 <script type="text/javascript" src="javascript/index.js"></script>
 </html>
