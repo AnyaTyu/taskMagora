@@ -1,0 +1,14 @@
+{
+  "name": "notes",
+  "version": "0.0.1",
+  "authors": [
+    "Anya Tyutyunnik <anya.tyutyunnik@yandex.ru>"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "knockout.punches": "~0.3.1",
+    "knockout": "~3.2.0",
+    "bootstrap3-datetimepicker": "~3.1.3"
+  }
+}
