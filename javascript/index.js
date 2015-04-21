@@ -2,60 +2,42 @@
  init Parse
  */
 Parse.initialize("OJRjJ4PcoY4JFTHl1FhU9HAAMUs23eNUoz5bNlbo", "nUwBpwFYP1uJEsimoRcrn6xMbMROkEqPrmikhNzB");
-var user = new Parse.User();
-var Post = Parse.Object.extend("Post");
+var user = new Parse.User(),
+    Post = Parse.Object.extend("Post"),
+    interval;
 /*
- enable ko punches for custom method
- */
-ko.punches.enableAll();
-/*
- custom filters for @return date in current format
+ function filters for @return date in current format
  if note create < than 184561702 - two days - view it from Now
  else - in format d M Do Y h:mm:ss
  */
-ko.filters.my_date = function (value) {
+function my_date(value) {
     var now = moment();
     if (now.diff(moment(value)) < 184561702) {
+        _NewNotesModel.timer(true);
         return moment(value).fromNow();
     }
     else {
         return moment(value).format("dddd, MMMM Do YYYY, h:mm:ss")
     }
-
-};
+}
 /*
  main KO view Model for our method
+ @name - user name for greeting
+ @notes - array of notes
+ @note - body of new note
+ @login - user name
+ @pass - user password
+ @error - error message
  */
 var NotesModel = function (contacts) {
     var self = this;
-    /*
-     @name - user name for greeting
-     */
     self.name = ko.observable('');
-    /*
-     @notes - array of notes
-     */
     self.notes = ko.observableArray([]);
-    /*
-     @note - body of new note
-     */
     self.note = ko.observable('');
-    /*
-     @login - user name
-     */
     self.login = ko.observable('');
-    /*
-     @pass - user password
-     */
     self.pass = ko.observable('');
-    /*
-     @mode - switch for view popup sign in
-     */
-    self.mode = ko.observable(false);
-    /*
-     @error - error message
-     */
     self.error = ko.observable('');
+    self.timer = ko.observable();
     /*
      function for user sign up
      */
@@ -103,7 +85,7 @@ var NotesModel = function (contacts) {
      */
     self.successLogin = function (user) {
         self.info(user);
-        self.mode(false);
+        $('.popUp').hide();
         self.login('');
         self.pass('');
         self.error('');
@@ -113,12 +95,18 @@ var NotesModel = function (contacts) {
      */
     self.info = function (user) {
         self.name(user._serverData.username);
-        var query = new Parse.Query(Post);
+        var query = new Parse.Query(Post),
+            el;
         query.equalTo("user", user);
         query.find({
             success: function (usersPosts) {
                 usersPosts.forEach(function (element, index, array) {
-                    self.notes.unshift(array[index]._serverData);
+                    el = array[index]._serverData;
+                    self.notes.unshift({
+                        text: el.text,
+                        date: el.date,
+                        time:ko.observable(my_date(el.date))
+                    });
                 })
             }
         });
@@ -128,8 +116,8 @@ var NotesModel = function (contacts) {
      */
     self.logout = function () {
         Parse.User.logOut();
-        var currentUser = Parse.User.current(); // this will now be null
-        self.mode(true);
+        var currentUser = Parse.User.current();
+        $('.popUp').css('display','flex');
         self.notes([]);
         self.name('');
     };
@@ -143,10 +131,9 @@ var NotesModel = function (contacts) {
         if (currentUser) {
             self.info(currentUser)
         } else {
-            self.mode(true);
+            $('.popUp').css('display','flex');
         }
     };
-
     /*
      function for save new note
      */
@@ -155,7 +142,8 @@ var NotesModel = function (contacts) {
         if ($.trim(val).length > 0) {
             self.notes.unshift({
                 text: val,
-                date: Date.parse(new Date())
+                date: Date.parse(new Date()),
+                time:ko.observable(my_date(Date.parse(new Date())))
             });
             self.note('');
             var user = Parse.User.current();
@@ -190,6 +178,25 @@ var NotesModel = function (contacts) {
                 })
             }
         });
+    };
+    ko.computed(function(){
+        self.timer();
+       if(self.timer() && !interval){
+            interval = setInterval(function() {
+                self.updateTime();
+            }, 60000);
+           console.log('on');
+       }
+        else{
+           clearInterval(interval);
+           console.log('off');
+       }
+        console.log(interval);
+    });
+    self.updateTime = function(){
+        self.notes().forEach(function (element, index, array) {
+            self.notes()[index].time(my_date(element.date))
+        })
     }
 };
 

@@ -12,7 +12,6 @@
         <button class="button button_type_login" data-bind="click:logout">Exit</button>
     </div>
 </header>
-<!-- ko if: mode() === true -->
 <div class="popUp">
     <div class="popUp__item">
         <div class="popUp__item__block_left">
@@ -28,7 +27,6 @@
         </div>
     </div>
 </div>
-<!-- /ko -->
 <div class="content">
     <div class="content_item content_item__list">
             <h2 class="title">All my notes:</h2>
@@ -49,7 +47,7 @@
 <script type="text/html" id="grid-tpl">
     <tr class="table__tr">
         <td class="table__td" data-bind="text:text"></td>
-        <td class="table__td" data-bind="text:date | my_date"></td>
+        <td class="table__td" data-bind="text:time"></td>
         <td class="table__td" data-bind="click:$parent.deleteItem"><span class="table__td__item_delete"></span></td>
     </tr>
 </script>
@@ -57,7 +55,6 @@
 </body>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/knockout/dist/knockout.js"></script>
-<script type="text/javascript" src="bower_components/knockout.punches/knockout.punches.min.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script>
     moment().format();
