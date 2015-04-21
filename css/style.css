@@ -139,3 +139,59 @@ html, body {
     padding: 15px 0;
     font-size: 15px;
 }
+/*for popup login*/
+.popUp{
+    top:0;
+    left:0;
+    position:fixed;
+    background:rgba(0,0,0, 0.8);
+    width:100%;
+    height:100%;
+    z-index:10000;
+    display: flex;
+}
+.popUp__item{
+    vertical-align: middle;
+    font-size: 14px;
+    position: relative;
+    background: #fff;
+
+    padding: 25px;
+    margin: auto;
+    box-shadow: 0px 0px 20px #000;
+    border-radius: 3px;
+}
+.textfield{
+    height: 42px;
+    width: 320px;
+    border: 1px solid #8c8c8c;
+    outline: none;
+    font-size: 16px;
+    font-family: ProximaNovaLight;
+    font-weight: lighter;
+    color: #8c8c8c;
+    padding: 0px 10px;
+    margin-bottom: 10px;
+}
+.title_for_sign_in{
+    margin-bottom: 10px;
+}
+.or{
+    display: inline-block;
+    padding:0 20px;
+}
+.popUp__item__block_left{
+    width: 380px;
+    text-align: center;
+    display: inline-block;
+}
+.popUp__item__block_right{
+    display: inline-block;
+}
+.error{
+    border: 1px solid #ff6f6f;
+    background: #fff3f3;
+    color: #ff6f6f;
+    padding: 10px;
+    margin: 10px 0;
+}

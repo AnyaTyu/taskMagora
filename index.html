@@ -9,9 +9,26 @@
     <div class="header__item header__item_logo">NOTEs</div>
     <div class="header__item header__item_greeting">Hello, <span data-bind="text:name"></span></div>
     <div class="header__item header__item_exit">
-        <button class="button button_type_login">Exit</button>
+        <button class="button button_type_login" data-bind="click:logout">Exit</button>
     </div>
 </header>
+<!-- ko if: mode() === true -->
+<div class="popUp">
+    <div class="popUp__item">
+        <div class="popUp__item__block_left">
+            <h2 class="title title_for_sign_in">Enter your personal data</h2>
+            <!-- ko if: error().length > 0 -->
+            <div class="error" data-bind="text:error"></div>
+            <!-- /ko -->
+            <input placeholder="Enter your name" class = "textfield" type="text" data-bind="value:login">
+            <input placeholder="Enter your password" class = "textfield" type="password" data-bind="value:pass">
+            <button class="button button_type_submit" data-bind="click:sign_in">Sign in</button>
+            <span class="or">or</span>
+            <button class=" button button_type_submit" data-bind="click:sign_up">Sign up</button>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
 <div class="content">
     <div class="content_item content_item__list">
             <h2 class="title">All my notes:</h2>
@@ -45,5 +62,6 @@
 <script>
     moment().format();
 </script>
+<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.4.2.min.js"></script>
 <script type="text/javascript" src="javascript/index.js"></script>
 </html>
