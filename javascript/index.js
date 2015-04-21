@@ -74,6 +74,9 @@ var NotesModel = function (contacts) {
                 }
             });
         }
+        else{
+            self.error('Incorrect username or password')
+        }
     };
     /*
      function for user sign up
@@ -90,6 +93,9 @@ var NotesModel = function (contacts) {
                     self.error(error.message);
                 }
             });
+        }
+        else{
+            self.error('Incorrect username or password')
         }
     };
     /*
