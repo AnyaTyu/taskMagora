@@ -9,28 +9,43 @@
     <div class="header__item header__item_logo">NOTEs</div>
     <div class="header__item header__item_greeting">Hello, <span data-bind="text:name"></span></div>
     <div class="header__item header__item_exit">
-        <button class="button button_type_login" data-bind="click:logout">Exit</button>
+        <button class="button button_type_login" data-bind="click:logout" tabindex="-1">Exit</button>
     </div>
 </header>
-<div class="popUp">
-    <div class="popUp__item">
-        <div class="popUp__item__block_left">
-            <h2 class="title title_for_sign_in">Quick entry</h2>
-            <!-- ko if: error().length > 0 -->
-            <div class="error" data-bind="text:error"></div>
-            <!-- /ko -->
-            <input placeholder="Enter your name" class = "textfield" type="text" data-bind="value:login">
-            <input placeholder="Enter your password" class = "textfield" type="password" data-bind="value:pass">
-            <button class="button button_type_submit" data-bind="click:sign_in">Sign in</button>
-            <span class="or">or</span>
-            <button class=" button button_type_submit" data-bind="click:sign_up">Sign up</button>
+<!-- ko with: noteData -->
+<div class="pop_up_full" data-bind="click:$root.closePopup">
+    <div class="pop_up__item pop_up__item_full">
+        <div class="pop_up__item_full__box">
+            <table class="table">
+                <tr class="table__tr">
+                    <td class="table__td">{{$data.text}}</td>
+                    <td class="table__td pop_up__td">{{$data.time}}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
+<!--/ko -->
+
+<div class="pop_up">
+    <div class="pop_up__item">
+        <h2 class="title title_for_sign_in">Quick entry</h2>
+        <!-- ko if: error().length > 0 -->
+        <div class="error" data-bind="text:error"></div>
+        <!-- /ko -->
+        <input placeholder="Enter your name" autofocus="" tabindex="1" class = "textfield" type="text" data-bind="value:login">
+        <input placeholder="Enter your password" tabindex="2" class = "textfield" type="password" data-bind="value:pass">
+        <button class="button button_type_submit"  tabindex="3" data-bind="click:sign_in">Sign in</button>
+        <span class="or">or</span>
+        <button class=" button button_type_submit" tabindex="4" data-bind="click:sign_up">Sign up</button>
+    </div>
+</div>
+
+
 <div class="content">
     <div class="content_item content_item__list">
             <h2 class="title">All my notes:</h2>
-            <table class="table">
+            <table class="table table_type_clickable">
                 <!-- ko template: {name: 'grid-tpl', foreach: notes} -->
                 <!-- /ko -->
             </table>
@@ -40,21 +55,23 @@
     </div>
     <div class="content_item content_item__new">
         <h2 class="title">Add new note:</h2>
-        <textarea  autofocus="" class="textarea" data-bind="value:note" maxlength = "320">Enter your note</textarea>
-        <button class="button button_type_submit" data-bind="click:save">Save note</button>
+        <textarea class="textarea" tabindex="-1" data-bind="value:note">Enter your note</textarea>
+        <button class="button button_type_submit" tabindex="-1"  data-bind="click:save">Save note</button>
     </div>
 </div>
 <script type="text/html" id="grid-tpl">
     <tr class="table__tr">
-        <td class="table__td" data-bind="text:text"></td>
-        <td class="table__td" data-bind="text:time"></td>
+        <td class="table__td" data-bind="text:text | fit:320,click: $root.openFull"></td>
+        <td class="table__td" data-bind="text:time, click: $root.openFull"></td>
         <td class="table__td" data-bind="click:$parent.deleteItem"><span class="table__td__item_delete"></span></td>
     </tr>
 </script>
+
 <footer class="footer">Copyright © 2015. Anya Tyutyunnik</footer>
 </body>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/knockout/dist/knockout.js"></script>
+<script type="text/javascript" src="bower_components/knockout.punches/knockout.punches.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script>
     moment().format();

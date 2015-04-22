@@ -6,6 +6,10 @@ var user = new Parse.User(),
     Post = Parse.Object.extend("Post"),
     interval;
 /*
+ enable ko punches
+ */
+ko.punches.enableAll();
+/*
  function filters for @return date in current format
  if note create < than 184561702 - two days - view it from Now
  else - in format d M Do Y h:mm:ss
@@ -38,6 +42,7 @@ var NotesModel = function (contacts) {
     self.pass = ko.observable('');
     self.error = ko.observable('');
     self.timer = ko.observable();
+    self.noteData = ko.observable({});
     /*
      function for user sign up
      */
@@ -56,7 +61,7 @@ var NotesModel = function (contacts) {
                 }
             });
         }
-        else{
+        else {
             self.error('Incorrect username or password')
         }
     };
@@ -76,7 +81,7 @@ var NotesModel = function (contacts) {
                 }
             });
         }
-        else{
+        else {
             self.error('Incorrect username or password')
         }
     };
@@ -85,10 +90,12 @@ var NotesModel = function (contacts) {
      */
     self.successLogin = function (user) {
         self.info(user);
-        $('.popUp').hide();
+        $('.pop_up').hide();
         self.login('');
         self.pass('');
         self.error('');
+        //for focus in textarea
+        $('.textarea').focus();
     };
     /*
      function for find all user notes and push them in array self.notes()
@@ -105,7 +112,7 @@ var NotesModel = function (contacts) {
                     self.notes.unshift({
                         text: el.text,
                         date: el.date,
-                        time:ko.observable(my_date(el.date))
+                        time: ko.observable(my_date(el.date))
                     });
                 })
             }
@@ -117,7 +124,7 @@ var NotesModel = function (contacts) {
     self.logout = function () {
         Parse.User.logOut();
         var currentUser = Parse.User.current();
-        $('.popUp').css('display','flex');
+        $('.pop_up').css('display', 'flex');
         self.notes([]);
         self.name('');
     };
@@ -129,9 +136,11 @@ var NotesModel = function (contacts) {
     self.init = function () {
         var currentUser = Parse.User.current();
         if (currentUser) {
-            self.info(currentUser)
+            self.info(currentUser);
+            //for focus in textarea
+            $('.textarea').focus();
         } else {
-            $('.popUp').css('display','flex');
+            $('.pop_up').css('display', 'flex');
         }
     };
     /*
@@ -143,7 +152,7 @@ var NotesModel = function (contacts) {
             self.notes.unshift({
                 text: val,
                 date: Date.parse(new Date()),
-                time:ko.observable(my_date(Date.parse(new Date())))
+                time: ko.observable(my_date(Date.parse(new Date())))
             });
             self.note('');
             var user = Parse.User.current();
@@ -179,25 +188,46 @@ var NotesModel = function (contacts) {
             }
         });
     };
-    ko.computed(function(){
+    /*
+     computed for call update page one in a minute
+     */
+    ko.computed(function () {
         self.timer();
-       if(self.timer() && !interval){
-            interval = setInterval(function() {
+        if (self.timer() && !interval) {
+            interval = setInterval(function () {
                 self.updateTime();
             }, 60000);
-           console.log('on');
-       }
-        else{
-           clearInterval(interval);
-           console.log('off');
-       }
+            console.log('on');
+        }
+        else {
+            clearInterval(interval);
+            console.log('off');
+        }
         console.log(interval);
     });
-    self.updateTime = function(){
+    /*
+     function for update grid
+     */
+    self.updateTime = function () {
         self.notes().forEach(function (element, index, array) {
             self.notes()[index].time(my_date(element.date))
         })
-    }
+    };
+    /*
+     open popup for view note
+     */
+    self.openFull = function (o, e) {
+        self.noteData(o);
+        $('.pop_up_full').css('display', 'flex');
+    };
+    /*
+     close popup
+     */
+    self.closePopup = function (o, e) {
+        if (e.target && e.target.className && e.target.className === 'pop_up_full') {
+            $('.pop_up_full').hide();
+        }
+    };
 };
 
 var _NewNotesModel = new NotesModel();
